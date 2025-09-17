@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YANZTIANDI-SLOT ULTRA PRO</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle at top, #111, #000);
+  color: #fff;
+  text-align: center;
+  margin: 0; padding: 0;
+  overflow-x: hidden;
+}
+header {
+  background: #222;
+  padding: 15px;
+  font-size: 24px;
+  font-weight: bold;
+  color: gold;
+  text-shadow: 0 0 8px gold;
+}
+.menu { margin: 20px; }
+button {
+  padding: 10px 20px;
+  margin: 5px;
+  font-size: 16px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 0 5px #000;
+}
+button:hover { transform: scale(1.1); }
+.gold { background: gold; color: #111; box-shadow: 0 0 10px gold; }
+.red { background: crimson; color: #fff; box-shadow: 0 0 10px crimson; }
+.green { background: limegreen; color: #111; box-shadow: 0 0 10px limegreen; }
+.blue { background: dodgerblue; color: #fff; box-shadow: 0 0 10px dodgerblue; }
+.hidden { display: none; }
+.slot-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 90px);
+  grid-gap: 8px;
+  justify-content: center;
+  margin: 20px auto;
+}
+.slot-cell {
+  width: 90px; height: 90px;
+  font-size: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.05);
+  border: 2px solid #444;
+  border-radius: 15px;
+  text-shadow: 0 0 5px #000;
+}
+.history {
+  max-height: 220px;
+  overflow-y: auto;
+  margin: 10px auto;
+  width: 90%;
+  border: 1px solid #444;
+  background: rgba(0,0,0,0.5);
+  padding: 5px;
+  font-size: 14px;
+  text-align: left;
+  border-radius: 10px;
+}
+.spaceman-area { margin: 20px; }
+.coin {
+  position: fixed;
+  top: -50px;
+  font-size: 28px;
+  animation: fall linear forwards;
+}
+@keyframes fall {
+  to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+input[type=number] {
+  width: 80px; padding: 5px; border-radius: 5px;
+  border: none; text-align: center; font-size: 16px;
+  margin: 5px;
+}
+@media (max-width: 500px) {
+  .slot-grid { grid-template-columns: repeat(3, 60px); grid-gap: 5px; }
+  .slot-cell { width: 60px; height: 60px; font-size: 24px; }
+  button { font-size: 14px; padding: 8px 15px; }
+}
+</style>
+</head>
+<body>
+<header>YANZTIANDI-SLOT ULTRA PRO</header>
+
+<div id="menu" class="menu">
+  <h2>Pilih Game</h2>
+  <button class="gold" onclick="showGame('slot')">🎰 Slot Mahjong</button>
+  <button class="blue" onclick="showGame('spaceman')">👨‍🚀 Spaceman</button>
+</div>
+
+<div id="slot" class="hidden">
+  <h2>🎰 Slot Mahjong</h2>
+  <p>Saldo: <span id="slotSaldo">150000</span></p>
+  <div>
+    Taruhan: <input type="number" id="betAmount" value="1000" min="100" step="100">
+  </div>
+  <div class="slot-grid" id="slotGrid"></div>
+  <button class="green" onclick="spin()">Spin</button>
+  <button class="blue" id="turboBtn" onclick="toggleTurbo()">Turbo: OFF</button>
+  <div>
+    <button onclick="autoSpin(10)">10x Auto</button>
+    <button onclick="autoSpin(30)">30x Auto</button>
+    <button onclick="autoSpin(100)">100x Auto</button>
+    <button onclick="autoSpin(1000)">1000x Auto</button>
+    <button class="red" onclick="stopAuto()">Stop</button>
+  </div>
+  <h3>History</h3>
+  <div class="history" id="slotHistory"></div>
+  <button class="red" onclick="resetHistory('slotHistory')">Reset History</button>
+  <button onclick="backMenu()">Kembali</button>
+</div>
+
+<div id="spaceman" class="hidden">
+  <h2>👨‍🚀 Spaceman</h2>
+  <p>Saldo: <span id="spacemanSaldo">150000</span></p>
+  <div class="spaceman-area">
+    <p>Multiplier: <span id="multiplier">1.0</span>x</p>
+    Taruhan: <input type="number" id="spacemanBet" value="1000" min="100" step="100">
+    <br>
+    <button class="green" onclick="startSpaceman()">Start</button>
+    <button class="gold" onclick="cashout()">Cashout</button>
+  </div>
+  <h3>History</h3>
+  <div class="history" id="spacemanHistory"></div>
+  <button class="red" onclick="resetHistory('spacemanHistory')">Reset History</button>
+  <button onclick="backMenu()">Kembali</button>
+</div>
+
+<audio id="spinSound" src="https://freesound.org/data/previews/331/331912_3248244-lq.mp3"></audio>
+<audio id="winSound" src="https://freesound.org/data/previews/82/82921_1022651-lq.mp3"></audio>
+<audio id="crashSound" src="https://freesound.org/data/previews/341/341695_3248244-lq.mp3"></audio>
+
+<script>
+let saldo = 150000;
+let autoSpinCount = 0;
+let autoSpinning = false;
+let turbo = false;
+const symbols = ["🍒","🔔","7️⃣","💎","🍀","⭐"];
+const multipliers = [2,3,5,8,10,15,20,100];
+
+function showGame(game){
+  document.getElementById("menu").classList.add("hidden");
+  document.getElementById("slot").classList.add("hidden");
+  document.getElementById("spaceman").classList.add("hidden");
+  document.getElementById(game).classList.remove("hidden");
+  updateSaldo();
+}
+function backMenu(){
+  document.getElementById("menu").classList.remove("hidden");
+  document.getElementById("slot").classList.add("hidden");
+  document.getElementById("spaceman").classList.add("hidden");
+}
+function updateSaldo(){
+  document.getElementById("slotSaldo").innerText = saldo;
+  document.getElementById("spacemanSaldo").innerText = saldo;
+}
+function playSound(id){ 
+  let s = document.getElementById(id); 
+  s.currentTime=0; s.play(); 
+}
+
+function spin(){
+  let bet = parseInt(document.getElementById("betAmount").value);
+  if(saldo < bet){ alert("Saldo tidak cukup!"); return; }
+  saldo -= bet; updateSaldo();
+  playSound("spinSound");
+
+  const grid = document.getElementById("slotGrid");
+  grid.innerHTML="";
+  let line=[];
+  for(let i=0;i<3;i++){
+    line[i]=[];
+    for(let j=0;j<3;j++){
+      let cell=document.createElement("div");
+      cell.className="slot-cell";
+      let roll=Math.random();
+      if(roll<0.15){
+        let m=multipliers[Math.floor(Math.random()*multipliers.length)];
+        cell.innerText="x"+m;
+        line[i][j]="x"+m";
+      } else {
+        let s=symbols[Math.floor(Math.random()*symbols.length)];
+        cell.innerText=s;
+        line[i][j]=s;
+      }
+      grid.appendChild(cell);
+    }
+  }
+
+  let win=0, multi=1;
+  if(line[1][0]===line[1][1] && line[1][1]===line[1][2]) win=bet*5;
+  for(let j=0;j<3;j++){ if((""+line[1][j]).includes("x")) multi*=parseInt(line[1][j].substring(1)); }
+  if(win>0){ win*=multi; saldo+=win; spawnCoins(); playSound("winSound"); }
+  updateSaldo();
+  addHistory("slotHistory","Spin → Win: "+win+" (x"+multi+")");
+
+  if(autoSpinning && autoSpinCount>0){
+    autoSpinCount--;
+    setTimeout(spin,turbo?100:400);
+  } else autoSpinning=false;
+}
+
+function toggleTurbo(){ turbo=!turbo; document.getElementById("turboBtn").innerText="Turbo: "+(turbo?"ON":"OFF"); }
+function autoSpin(count){ autoSpinCount=count; autoSpinning=true; spin(); }
+function stopAuto(){ autoSpinning=false; autoSpinCount=0; }
+
+function addHistory(id,text){
+  let box=document.getElementById(id);
+  box.innerHTML+="<div>"+text+"</div>";
+  if(box.children.length>100) box.removeChild(box.firstChild);
+  box.scrollTop = box.scrollHeight;
+}
+
+function resetHistory(id){ document.getElementById(id).innerHTML=""; }
+
+function spawnCoins(){
+  for(let i=0;i<15;i++){
+    let coin
