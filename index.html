@@ -3,227 +3,235 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>YANZTIANDI-SLOT ULTRA PRO</title>
+<title>Slot Mahjong & Spaceman Rupiah</title>
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background: radial-gradient(circle at top, #111, #000);
-  color: #fff;
-  text-align: center;
-  margin: 0; padding: 0;
-  overflow-x: hidden;
-}
-header {
-  background: #222;
-  padding: 15px;
-  font-size: 24px;
-  font-weight: bold;
-  color: gold;
-  text-shadow: 0 0 8px gold;
-}
-.menu { margin: 20px; }
-button {
-  padding: 10px 20px;
-  margin: 5px;
-  font-size: 16px;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 0 0 5px #000;
-}
-button:hover { transform: scale(1.1); }
-.gold { background: gold; color: #111; box-shadow: 0 0 10px gold; }
-.red { background: crimson; color: #fff; box-shadow: 0 0 10px crimson; }
-.green { background: limegreen; color: #111; box-shadow: 0 0 10px limegreen; }
-.blue { background: dodgerblue; color: #fff; box-shadow: 0 0 10px dodgerblue; }
-.hidden { display: none; }
-.slot-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 90px);
-  grid-gap: 8px;
-  justify-content: center;
-  margin: 20px auto;
-}
-.slot-cell {
-  width: 90px; height: 90px;
-  font-size: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255,255,255,0.05);
-  border: 2px solid #444;
-  border-radius: 15px;
-  text-shadow: 0 0 5px #000;
-}
-.history {
-  max-height: 220px;
-  overflow-y: auto;
-  margin: 10px auto;
-  width: 90%;
-  border: 1px solid #444;
-  background: rgba(0,0,0,0.5);
-  padding: 5px;
-  font-size: 14px;
-  text-align: left;
-  border-radius: 10px;
-}
-.spaceman-area { margin: 20px; }
-.coin {
-  position: fixed;
-  top: -50px;
-  font-size: 28px;
-  animation: fall linear forwards;
-}
-@keyframes fall {
-  to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
-}
-input[type=number] {
-  width: 80px; padding: 5px; border-radius: 5px;
-  border: none; text-align: center; font-size: 16px;
-  margin: 5px;
-}
-@media (max-width: 500px) {
-  .slot-grid { grid-template-columns: repeat(3, 60px); grid-gap: 5px; }
-  .slot-cell { width: 60px; height: 60px; font-size: 24px; }
-  button { font-size: 14px; padding: 8px 15px; }
-}
+  body {
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle at top, #111, #000);
+    color: #fff;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+  }
+  h1 {
+    color: gold;
+    text-shadow: 0 0 10px red;
+  }
+  .slot {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    gap: 10px;
+    justify-content: center;
+    margin: 20px auto;
+  }
+  .cell {
+    width: 100px;
+    height: 100px;
+    background: #222;
+    border: 2px solid gold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    border-radius: 10px;
+  }
+  button, select {
+    background: gold;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  button:hover, select:hover {
+    background: orange;
+  }
+  .coin {
+    position: fixed;
+    font-size: 24px;
+    animation: fall linear;
+  }
+  @keyframes fall {
+    from { transform: translateY(-50px); opacity:1; }
+    to { transform: translateY(100vh); opacity:0; }
+  }
+  .spaceman {
+    margin-top: 30px;
+    padding: 15px;
+    border: 2px solid cyan;
+    border-radius: 12px;
+  }
 </style>
 </head>
 <body>
-<header>YANZTIANDI-SLOT ULTRA PRO</header>
-
-<div id="menu" class="menu">
-  <h2>Pilih Game</h2>
-  <button class="gold" onclick="showGame('slot')">🎰 Slot Mahjong</button>
-  <button class="blue" onclick="showGame('spaceman')">👨‍🚀 Spaceman</button>
-</div>
-
-<div id="slot" class="hidden">
-  <h2>🎰 Slot Mahjong</h2>
-  <p>Saldo: <span id="slotSaldo">150000</span></p>
+  <h1>🎰 Slot Mahjong & Spaceman 🚀</h1>
+  
+  <!-- Pilihan Bet -->
   <div>
-    Taruhan: <input type="number" id="betAmount" value="1000" min="100" step="100">
+    <label>Pilih Bet: </label>
+    <select id="betAmount">
+      <option value="40">Rp40</option>
+      <option value="100">Rp100</option>
+      <option value="1000">Rp1.000</option>
+      <option value="5000">Rp5.000</option>
+      <option value="10000">Rp10.000</option>
+      <option value="20000">Rp20.000</option>
+      <option value="50000">Rp50.000</option>
+      <option value="100000">Rp100.000</option>
+      <option value="200000">Rp200.000</option>
+    </select>
   </div>
-  <div class="slot-grid" id="slotGrid"></div>
-  <button class="green" onclick="spin()">Spin</button>
-  <button class="blue" id="turboBtn" onclick="toggleTurbo()">Turbo: OFF</button>
+
+  <!-- Slot Mahjong -->
+  <div class="slot" id="slot">
+    <div class="cell">❓</div>
+    <div class="cell">❓</div>
+    <div class="cell">❓</div>
+    <div class="cell">❓</div>
+    <div class="cell">❓</div>
+    <div class="cell">❓</div>
+    <div class="cell">❓</div>
+    <div class="cell">❓</div>
+    <div class="cell">❓</div>
+  </div>
+
   <div>
-    <button onclick="autoSpin(10)">10x Auto</button>
-    <button onclick="autoSpin(30)">30x Auto</button>
-    <button onclick="autoSpin(100)">100x Auto</button>
-    <button onclick="autoSpin(1000)">1000x Auto</button>
-    <button class="red" onclick="stopAuto()">Stop</button>
+    <button onclick="spin()">🎰 Spin</button>
+    <button onclick="toggleAuto()">🔄 Auto</button>
+    <button onclick="toggleTurbo()">⚡ Turbo</button>
   </div>
-  <h3>History</h3>
-  <div class="history" id="slotHistory"></div>
-  <button class="red" onclick="resetHistory('slotHistory')">Reset History</button>
-  <button onclick="backMenu()">Kembali</button>
-</div>
 
-<div id="spaceman" class="hidden">
-  <h2>👨‍🚀 Spaceman</h2>
-  <p>Saldo: <span id="spacemanSaldo">150000</span></p>
-  <div class="spaceman-area">
-    <p>Multiplier: <span id="multiplier">1.0</span>x</p>
-    Taruhan: <input type="number" id="spacemanBet" value="1000" min="100" step="100">
-    <br>
-    <button class="green" onclick="startSpaceman()">Start</button>
-    <button class="gold" onclick="cashout()">Cashout</button>
+  <p id="status">Saldo: Rp10.000 | Auto: OFF | Turbo: OFF</p>
+
+  <!-- Spaceman -->
+  <div class="spaceman">
+    <h2>🚀 Spaceman Mode</h2>
+    <p id="spacemanStatus">Multiplier: x1.00</p>
+    <button onclick="startSpaceman()">Launch 🚀</button>
+    <button onclick="cashout()">Cashout 💰</button>
   </div>
-  <h3>History</h3>
-  <div class="history" id="spacemanHistory"></div>
-  <button class="red" onclick="resetHistory('spacemanHistory')">Reset History</button>
-  <button onclick="backMenu()">Kembali</button>
-</div>
-
-<audio id="spinSound" src="https://freesound.org/data/previews/331/331912_3248244-lq.mp3"></audio>
-<audio id="winSound" src="https://freesound.org/data/previews/82/82921_1022651-lq.mp3"></audio>
-<audio id="crashSound" src="https://freesound.org/data/previews/341/341695_3248244-lq.mp3"></audio>
 
 <script>
-let saldo = 150000;
-let autoSpinCount = 0;
-let autoSpinning = false;
+let saldo = 10000;
+let auto = false;
 let turbo = false;
-const symbols = ["🍒","🔔","7️⃣","💎","🍀","⭐"];
-const multipliers = [2,3,5,8,10,15,20,100];
+let autoInterval;
+const simbol = ["🍒","🍋","🔔","⭐","💎","7️⃣"];
 
-function showGame(game){
-  document.getElementById("menu").classList.add("hidden");
-  document.getElementById("slot").classList.add("hidden");
-  document.getElementById("spaceman").classList.add("hidden");
-  document.getElementById(game).classList.remove("hidden");
-  updateSaldo();
+// format rupiah
+function formatRp(num){
+  return "Rp" + num.toLocaleString("id-ID");
 }
-function backMenu(){
-  document.getElementById("menu").classList.remove("hidden");
-  document.getElementById("slot").classList.add("hidden");
-  document.getElementById("spaceman").classList.add("hidden");
-}
-function updateSaldo(){
-  document.getElementById("slotSaldo").innerText = saldo;
-  document.getElementById("spacemanSaldo").innerText = saldo;
-}
-function playSound(id){ 
-  let s = document.getElementById(id); 
-  s.currentTime=0; s.play(); 
+function getBet(){
+  return parseInt(document.getElementById("betAmount").value);
 }
 
+// SLOT -------------------
 function spin(){
-  let bet = parseInt(document.getElementById("betAmount").value);
-  if(saldo < bet){ alert("Saldo tidak cukup!"); return; }
-  saldo -= bet; updateSaldo();
-  playSound("spinSound");
-
-  const grid = document.getElementById("slotGrid");
-  grid.innerHTML="";
-  let line=[];
-  for(let i=0;i<3;i++){
-    line[i]=[];
-    for(let j=0;j<3;j++){
-      let cell=document.createElement("div");
-      cell.className="slot-cell";
-      let roll=Math.random();
-      if(roll<0.15){
-        let m=multipliers[Math.floor(Math.random()*multipliers.length)];
-        cell.innerText="x"+m;
-        line[i][j]="x"+m";
-      } else {
-        let s=symbols[Math.floor(Math.random()*symbols.length)];
-        cell.innerText=s;
-        line[i][j]=s;
-      }
-      grid.appendChild(cell);
-    }
+  let bet = getBet();
+  if(saldo < bet){
+    alert("Saldo tidak cukup untuk spin!");
+    return;
   }
-
-  let win=0, multi=1;
-  if(line[1][0]===line[1][1] && line[1][1]===line[1][2]) win=bet*5;
-  for(let j=0;j<3;j++){ if((""+line[1][j]).includes("x")) multi*=parseInt(line[1][j].substring(1)); }
-  if(win>0){ win*=multi; saldo+=win; spawnCoins(); playSound("winSound"); }
-  updateSaldo();
-  addHistory("slotHistory","Spin → Win: "+win+" (x"+multi+")");
-
-  if(autoSpinning && autoSpinCount>0){
-    autoSpinCount--;
-    setTimeout(spin,turbo?100:400);
-  } else autoSpinning=false;
+  saldo -= bet;
+  let cells = document.querySelectorAll(".cell");
+  let hasil = [];
+  cells.forEach(c=>{
+    let s = simbol[Math.floor(Math.random()*simbol.length)];
+    c.innerText = s;
+    hasil.push(s);
+  });
+  cekMenang(hasil, bet);
 }
 
-function toggleTurbo(){ turbo=!turbo; document.getElementById("turboBtn").innerText="Turbo: "+(turbo?"ON":"OFF"); }
-function autoSpin(count){ autoSpinCount=count; autoSpinning=true; spin(); }
-function stopAuto(){ autoSpinning=false; autoSpinCount=0; }
-
-function addHistory(id,text){
-  let box=document.getElementById(id);
-  box.innerHTML+="<div>"+text+"</div>";
-  if(box.children.length>100) box.removeChild(box.firstChild);
-  box.scrollTop = box.scrollHeight;
+function cekMenang(arr, bet){
+  let status = document.getElementById("status");
+  if(arr[3]===arr[4] && arr[4]===arr[5]){
+    let menang = bet * (5 + Math.floor(Math.random()*20)); // 5x–25x
+    saldo += menang;
+    status.innerText = `MENANG ${formatRp(menang)}! Saldo: ${formatRp(saldo)}`;
+    spawnCoins();
+  } else {
+    status.innerText = `Kalah -${formatRp(bet)} | Saldo: ${formatRp(saldo)}`;
+  }
 }
-
-function resetHistory(id){ document.getElementById(id).innerHTML=""; }
 
 function spawnCoins(){
   for(let i=0;i<15;i++){
-    let coin
+    let coin = document.createElement("div");
+    coin.className="coin";
+    coin.innerText="💰";
+    coin.style.left = Math.random()*window.innerWidth+"px";
+    coin.style.top = "0px";
+    coin.style.animationDuration=(1+Math.random()*2)+"s";
+    document.body.appendChild(coin);
+    setTimeout(()=>coin.remove(),3000);
+  }
+}
+
+function toggleAuto(){
+  auto = !auto;
+  document.getElementById("status").innerText = `Saldo: ${formatRp(saldo)} | Auto: ${auto?"ON":"OFF"} | Turbo: ${turbo?"ON":"OFF"}`;
+  if(auto){
+    autoInterval = setInterval(spin, turbo?200:1000);
+  } else {
+    clearInterval(autoInterval);
+  }
+}
+function toggleTurbo(){
+  turbo=!turbo;
+  document.getElementById("status").innerText = `Saldo: ${formatRp(saldo)} | Auto: ${auto?"ON":"OFF"} | Turbo: ${turbo?"ON":"OFF"}`;
+  if(auto){
+    clearInterval(autoInterval);
+    autoInterval=setInterval(spin,turbo?200:1000);
+  }
+}
+
+// SPACEMAN ----------------
+let spacemanActive=false, multiplier=1, spacemanTimer;
+
+function startSpaceman(){
+  let bet = getBet();
+  if(spacemanActive) return;
+  if(saldo < bet){
+    alert("Saldo tidak cukup untuk Spaceman!");
+    return;
+  }
+  saldo -= bet;
+  document.getElementById("status").innerText=`Saldo: ${formatRp(saldo)} | Auto: ${auto?"ON":"OFF"} | Turbo: ${turbo?"ON":"OFF"}`;
+  
+  spacemanActive=true;
+  multiplier=1;
+  updateSpaceman();
+  spacemanTimer=setInterval(()=>{
+    multiplier += (Math.random()*0.5);
+    updateSpaceman();
+    if(Math.random()<0.1){ // crash 10% chance
+      crash();
+    }
+  }, 1000);
+}
+function updateSpaceman(){
+  document.getElementById("spacemanStatus").innerText="Multiplier: x"+multiplier.toFixed(2);
+}
+function crash(){
+  clearInterval(spacemanTimer);
+  spacemanActive=false;
+  document.getElementById("spacemanStatus").innerText="💥 CRASHED at x"+multiplier.toFixed(2);
+}
+function cashout(){
+  if(spacemanActive){
+    clearInterval(spacemanTimer);
+    spacemanActive=false;
+    let bet = getBet();
+    let win=Math.floor(bet*multiplier);
+    saldo+=win;
+    document.getElementById("spacemanStatus").innerText="Cashed out "+formatRp(win)+" at x"+multiplier.toFixed(2);
+    document.getElementById("status").innerText=`Saldo: ${formatRp(saldo)} | Auto: ${auto?"ON":"OFF"} | Turbo: ${turbo?"ON":"OFF"}`;
+    spawnCoins();
+  }
+}
+</script>
+</body>
+</html>
