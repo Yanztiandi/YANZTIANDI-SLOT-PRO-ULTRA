@@ -1,237 +1,175 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Slot Mahjong & Spaceman Rupiah</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background: radial-gradient(circle at top, #111, #000);
-    color: #fff;
-    text-align: center;
-    margin: 0;
-    padding: 20px;
-  }
-  h1 {
-    color: gold;
-    text-shadow: 0 0 10px red;
-  }
-  .slot {
-    display: grid;
-    grid-template-columns: repeat(3, 100px);
-    gap: 10px;
-    justify-content: center;
-    margin: 20px auto;
-  }
-  .cell {
-    width: 100px;
-    height: 100px;
-    background: #222;
-    border: 2px solid gold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2em;
-    border-radius: 10px;
-  }
-  button, select {
-    background: gold;
-    border: none;
-    padding: 10px 20px;
-    margin: 5px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-  }
-  button:hover, select:hover {
-    background: orange;
-  }
-  .coin {
-    position: fixed;
-    font-size: 24px;
-    animation: fall linear;
-  }
-  @keyframes fall {
-    from { transform: translateY(-50px); opacity:1; }
-    to { transform: translateY(100vh); opacity:0; }
-  }
-  .spaceman {
-    margin-top: 30px;
-    padding: 15px;
-    border: 2px solid cyan;
-    border-radius: 12px;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YANZTIANDI-SLOT PRO ULTRA</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      height: 100%;
+      background: #111;
+      color: white;
+      overflow: hidden;
+    }
+    /* Splash typing screen */
+    #splash {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: black;
+      font-size: 1.5rem;
+      font-weight: bold;
+      white-space: pre;
+    }
+    /* Main container */
+    #main {
+      display: none;
+      padding: 20px;
+      text-align: center;
+    }
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+    .game-card {
+      background: #222;
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .game-card:hover {
+      transform: scale(1.05);
+    }
+    .game-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+    .game-card h3 {
+      margin: 10px 0;
+    }
+    /* Game section iframe */
+    .game-section {
+      display: none;
+      height: 100vh;
+      width: 100%;
+      background: black;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 999;
+      flex-direction: column;
+    }
+    .game-section iframe {
+      flex: 1;
+      width: 100%;
+      border: none;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    .loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 20px;
+    }
+    .back-btn {
+      background: red;
+      border: none;
+      padding: 10px 20px;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+    }
+  </style>
 </head>
 <body>
-  <h1>🎰 Slot Mahjong & Spaceman 🚀</h1>
-  
-  <!-- Pilihan Bet -->
-  <div>
-    <label>Pilih Bet: </label>
-    <select id="betAmount">
-      <option value="40">Rp40</option>
-      <option value="100">Rp100</option>
-      <option value="1000">Rp1.000</option>
-      <option value="5000">Rp5.000</option>
-      <option value="10000">Rp10.000</option>
-      <option value="20000">Rp20.000</option>
-      <option value="50000">Rp50.000</option>
-      <option value="100000">Rp100.000</option>
-      <option value="200000">Rp200.000</option>
-    </select>
+  <!-- Splash typing -->
+  <div id="splash"></div>
+
+  <!-- Main content -->
+  <div id="main">
+    <h1>🎰 YANZTIANDI-SLOT PRO ULTRA 🎰</h1>
+    <div class="game-grid">
+      <div class="game-card" onclick="openGame('mahjong')">
+        <img src="https://files.catbox.moe/iknd62.jpeg" alt="Slot Mahjong">
+        <h3>Slot Mahjong</h3>
+      </div>
+      <div class="game-card" onclick="openGame('spaceman')">
+        <img src="https://files.catbox.moe/e2q1mp.jpeg" alt="Spaceman">
+        <h3>Spaceman</h3>
+      </div>
+      <div class="game-card" onclick="openGame('starlight')">
+        <img src="https://files.catbox.moe/gaalhr.jpeg" alt="Starlight Princess">
+        <h3>Starlight Princess</h3>
+      </div>
+    </div>
   </div>
 
-  <!-- Slot Mahjong -->
-  <div class="slot" id="slot">
-    <div class="cell">❓</div>
-    <div class="cell">❓</div>
-    <div class="cell">❓</div>
-    <div class="cell">❓</div>
-    <div class="cell">❓</div>
-    <div class="cell">❓</div>
-    <div class="cell">❓</div>
-    <div class="cell">❓</div>
-    <div class="cell">❓</div>
+  <!-- Game sections -->
+  <div id="mahjong" class="game-section">
+    <div class="loading">Loading Slot Mahjong...</div>
+    <iframe src="https://demogamesfree.pragmaticplay.net/gs2c/openGame.do?gameSymbol=vs20mahj&lang=en&cur=USD"
+            onload="hideLoading(this)"></iframe>
+    <button class="back-btn" onclick="goBack('mahjong')">Back</button>
   </div>
 
-  <div>
-    <button onclick="spin()">🎰 Spin</button>
-    <button onclick="toggleAuto()">🔄 Auto</button>
-    <button onclick="toggleTurbo()">⚡ Turbo</button>
+  <div id="spaceman" class="game-section">
+    <div class="loading">Loading Spaceman...</div>
+    <iframe src="https://demogamesfree.pragmaticplay.net/gs2c/openGame.do?gameSymbol=spaceman&lang=en&cur=USD"
+            onload="hideLoading(this)"></iframe>
+    <button class="back-btn" onclick="goBack('spaceman')">Back</button>
   </div>
 
-  <p id="status">Saldo: Rp10.000 | Auto: OFF | Turbo: OFF</p>
-
-  <!-- Spaceman -->
-  <div class="spaceman">
-    <h2>🚀 Spaceman Mode</h2>
-    <p id="spacemanStatus">Multiplier: x1.00</p>
-    <button onclick="startSpaceman()">Launch 🚀</button>
-    <button onclick="cashout()">Cashout 💰</button>
+  <div id="starlight" class="game-section">
+    <div class="loading">Loading Starlight Princess...</div>
+    <iframe src="https://demogamesfree.pragmaticplay.net/gs2c/openGame.do?gameSymbol=vs20starlight&lang=en&cur=USD"
+            onload="hideLoading(this)"></iframe>
+    <button class="back-btn" onclick="goBack('starlight')">Back</button>
   </div>
 
-<script>
-let saldo = 10000;
-let auto = false;
-let turbo = false;
-let autoInterval;
-const simbol = ["🍒","🍋","🔔","⭐","💎","7️⃣"];
-
-// format rupiah
-function formatRp(num){
-  return "Rp" + num.toLocaleString("id-ID");
-}
-function getBet(){
-  return parseInt(document.getElementById("betAmount").value);
-}
-
-// SLOT -------------------
-function spin(){
-  let bet = getBet();
-  if(saldo < bet){
-    alert("Saldo tidak cukup untuk spin!");
-    return;
-  }
-  saldo -= bet;
-  let cells = document.querySelectorAll(".cell");
-  let hasil = [];
-  cells.forEach(c=>{
-    let s = simbol[Math.floor(Math.random()*simbol.length)];
-    c.innerText = s;
-    hasil.push(s);
-  });
-  cekMenang(hasil, bet);
-}
-
-function cekMenang(arr, bet){
-  let status = document.getElementById("status");
-  if(arr[3]===arr[4] && arr[4]===arr[5]){
-    let menang = bet * (5 + Math.floor(Math.random()*20)); // 5x–25x
-    saldo += menang;
-    status.innerText = `MENANG ${formatRp(menang)}! Saldo: ${formatRp(saldo)}`;
-    spawnCoins();
-  } else {
-    status.innerText = `Kalah -${formatRp(bet)} | Saldo: ${formatRp(saldo)}`;
-  }
-}
-
-function spawnCoins(){
-  for(let i=0;i<15;i++){
-    let coin = document.createElement("div");
-    coin.className="coin";
-    coin.innerText="💰";
-    coin.style.left = Math.random()*window.innerWidth+"px";
-    coin.style.top = "0px";
-    coin.style.animationDuration=(1+Math.random()*2)+"s";
-    document.body.appendChild(coin);
-    setTimeout(()=>coin.remove(),3000);
-  }
-}
-
-function toggleAuto(){
-  auto = !auto;
-  document.getElementById("status").innerText = `Saldo: ${formatRp(saldo)} | Auto: ${auto?"ON":"OFF"} | Turbo: ${turbo?"ON":"OFF"}`;
-  if(auto){
-    autoInterval = setInterval(spin, turbo?200:1000);
-  } else {
-    clearInterval(autoInterval);
-  }
-}
-function toggleTurbo(){
-  turbo=!turbo;
-  document.getElementById("status").innerText = `Saldo: ${formatRp(saldo)} | Auto: ${auto?"ON":"OFF"} | Turbo: ${turbo?"ON":"OFF"}`;
-  if(auto){
-    clearInterval(autoInterval);
-    autoInterval=setInterval(spin,turbo?200:1000);
-  }
-}
-
-// SPACEMAN ----------------
-let spacemanActive=false, multiplier=1, spacemanTimer;
-
-function startSpaceman(){
-  let bet = getBet();
-  if(spacemanActive) return;
-  if(saldo < bet){
-    alert("Saldo tidak cukup untuk Spaceman!");
-    return;
-  }
-  saldo -= bet;
-  document.getElementById("status").innerText=`Saldo: ${formatRp(saldo)} | Auto: ${auto?"ON":"OFF"} | Turbo: ${turbo?"ON":"OFF"}`;
-  
-  spacemanActive=true;
-  multiplier=1;
-  updateSpaceman();
-  spacemanTimer=setInterval(()=>{
-    multiplier += (Math.random()*0.5);
-    updateSpaceman();
-    if(Math.random()<0.1){ // crash 10% chance
-      crash();
+  <script>
+    // Typing effect
+    const splash = document.getElementById("splash");
+    const text = "WELCOME TO YANZTIANDI-SLOT PRO ULTRA";
+    let i = 0;
+    function typeWriter() {
+      if (i < text.length) {
+        splash.textContent += text.charAt(i);
+        i++;
+        setTimeout(typeWriter, 100);
+      } else {
+        setTimeout(() => {
+          splash.style.display = "none";
+          document.getElementById("main").style.display = "block";
+          document.body.style.overflow = "auto";
+        }, 1000);
+      }
     }
-  }, 1000);
-}
-function updateSpaceman(){
-  document.getElementById("spacemanStatus").innerText="Multiplier: x"+multiplier.toFixed(2);
-}
-function crash(){
-  clearInterval(spacemanTimer);
-  spacemanActive=false;
-  document.getElementById("spacemanStatus").innerText="💥 CRASHED at x"+multiplier.toFixed(2);
-}
-function cashout(){
-  if(spacemanActive){
-    clearInterval(spacemanTimer);
-    spacemanActive=false;
-    let bet = getBet();
-    let win=Math.floor(bet*multiplier);
-    saldo+=win;
-    document.getElementById("spacemanStatus").innerText="Cashed out "+formatRp(win)+" at x"+multiplier.toFixed(2);
-    document.getElementById("status").innerText=`Saldo: ${formatRp(saldo)} | Auto: ${auto?"ON":"OFF"} | Turbo: ${turbo?"ON":"OFF"}`;
-    spawnCoins();
-  }
-}
-</script>
+    window.onload = typeWriter;
+
+    // Game functions
+    function openGame(id) {
+      document.getElementById("main").style.display = "none";
+      document.getElementById(id).style.display = "flex";
+    }
+    function hideLoading(iframe) {
+      iframe.previousElementSibling.style.display = "none";
+      iframe.style.opacity = 1;
+    }
+    function goBack(id) {
+      document.getElementById(id).style.display = "none";
+      document.getElementById("main").style.display = "block";
+    }
+  </script>
 </body>
 </html>
